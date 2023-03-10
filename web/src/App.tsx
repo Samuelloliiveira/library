@@ -1,5 +1,7 @@
+import './style/global.css'
+
 export function App() {
   return (
-    <div>library</div>
+    <div className="text-violet-700">library</div>
   )
 }
