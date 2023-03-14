@@ -1,37 +1,14 @@
-import dayjs from 'dayjs'
 import Fastify from 'fastify'
-import { z } from 'zod'
-import { PrismaClient } from '@prisma/client'
+import { appRoutes } from './routes'
 
 const app = Fastify()
 
-const prisma = new PrismaClient()
-
-app.post('/books', async (request, reply) => {
-  const createBookBody = z.object({
-    title: z.string(),
-    author: z.string(),
-    bookReleaseDate: z.string(),
-  })
-
-  const { title, author, bookReleaseDate } = createBookBody.parse(request.body)
-
-  const today = dayjs().startOf('day').toDate()
-
-  await prisma.book.create({
-    data: {
-      title,
-      author,
-      book_release_date: bookReleaseDate,
-      crated_at: today
-    }
-  })
-
-  return reply.status(201).send()
-})
+app.register(appRoutes)
 
 app.listen({
   port: 3333,
 }).then(() => {
   console.log('HTTP Server running')
 })
+
+// Verificar se livro já existe para não cadastrar dois livros iguais
